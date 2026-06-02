@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* The store always uses a clean light theme — it no longer follows the
+   device's dark-mode setting, so it looks the same for every visitor. */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Continuously scrolling product strip used on the home page.
+   The strip lays the products out twice; moving it left by half its width
+   loops back to the start seamlessly. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 35s linear infinite;
+}
+
+/* Pause the scroll while the visitor hovers the strip. */
+.marquee-pause:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
+/* Respect visitors who turn on "reduce motion" in their system settings. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
