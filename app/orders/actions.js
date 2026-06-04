@@ -40,12 +40,13 @@ export async function logout() {
 export async function setStatus(formData) {
   const cookieStore = await cookies();
   if (cookieStore.get("admin_auth")?.value !== PASSWORD) {
-    redirect("/orders");
+    redirect("/admin");
   }
   const id = formData.get("id");
   const status = formData.get("status");
   if (id && status) {
     await updateOrderStatus(id, status);
     revalidatePath("/orders");
+    revalidatePath("/admin/orders");
   }
 }

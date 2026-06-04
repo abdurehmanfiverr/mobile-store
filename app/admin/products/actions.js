@@ -18,7 +18,7 @@ async function requireAdmin() {
   }
 }
 
-// Log in directly from the admin page.
+// Log in to the admin area.
 export async function adminLogin(formData) {
   if (formData.get("password") === PASSWORD) {
     const cookieStore = await cookies();
@@ -28,9 +28,15 @@ export async function adminLogin(formData) {
       path: "/",
       maxAge: 60 * 60 * 24 * 7,
     });
-    redirect("/admin/products");
+    redirect("/admin");
   }
-  redirect("/admin/products?error=login");
+  redirect("/admin?error=login");
+}
+
+export async function adminLogout() {
+  const cookieStore = await cookies();
+  cookieStore.delete("admin_auth");
+  redirect("/admin");
 }
 
 // Turn the submitted form into a product object.
