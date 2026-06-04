@@ -31,17 +31,17 @@ export function CartProvider({ children }) {
   }, [cart, loaded]);
 
   // Add one of a product. If it's already in the cart, bump its quantity.
-  function addToCart(product) {
+  function addToCart(product, qty = 1) {
     setCart((current) => {
       const existing = current.find((item) => item.name === product.name);
       if (existing) {
         return current.map((item) =>
           item.name === product.name
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + qty }
             : item
         );
       }
-      return [...current, { ...product, quantity: 1 }];
+      return [...current, { ...product, quantity: qty }];
     });
   }
 

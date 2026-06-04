@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProductById } from "../../lib/products-store";
+import { getProductById, getProducts } from "../../lib/products-store";
 import { formatPrice, discountPercent } from "../../products-data";
 import Stars from "../../Stars";
 import ProductImage from "../../ProductImage";
+import Reviews from "../../Reviews";
 import AddToCartButton from "../AddToCartButton";
+import ProductGrid from "../ProductGrid";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +14,14 @@ export default async function ProductDetailPage({ params }) {
   const { id } = await params;
   const product = await getProductById(id);
   if (!product) notFound();
+
+  // Related products: same category, excluding this one (up to 4).
+  const all = await getProducts();
+  const related = all
+    .filter((p) => p.category === product.category && p.id !== product.id)
+    .slice(0, 4);
+
+  const outOfStock = product.inStock === false;
 
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10">
@@ -25,15 +35,21 @@ export default async function ProductDetailPage({ params }) {
       <div className="mt-6 grid gap-10 md:grid-cols-2">
         {/* Large product image */}
         <div className="relative flex aspect-square items-center justify-center rounded-2xl border border-zinc-200 bg-white p-8">
-          {product.oldPrice && (
-            <span className="absolute left-4 top-4 rounded-md bg-red-600 px-2.5 py-1 text-xs font-bold text-white">
-              -{discountPercent(product.oldPrice, product.price)}%
+          {outOfStock ? (
+            <span className="absolute left-4 top-4 rounded-md bg-zinc-700 px-2.5 py-1 text-xs font-bold text-white">
+              Out of stock
             </span>
+          ) : (
+            product.oldPrice && (
+              <span className="absolute left-4 top-4 rounded-md bg-red-600 px-2.5 py-1 text-xs font-bold text-white">
+                -{discountPercent(product.oldPrice, product.price)}%
+              </span>
+            )
           )}
           <ProductImage
             src={product.image}
             alt={product.name}
-            imgClassName="h-full w-full object-contain"
+            imgClassName={`h-full w-full object-contain ${outOfStock ? "opacity-50" : ""}`}
             fallback={
               <span className="text-center text-sm font-medium text-zinc-400">
                 📷
@@ -51,7 +67,7 @@ export default async function ProductDetailPage({ params }) {
             {product.name}
           </h1>
 
-          <div className="mt-2">
+          <div className="mt-2 flex items-center gap-2">
             <Stars rating={product.rating} reviews={product.reviews} />
           </div>
 
@@ -72,7 +88,7 @@ export default async function ProductDetailPage({ params }) {
           </p>
 
           <div className="mt-8">
-            {product.inStock === false ? (
+            {outOfStock ? (
               <span className="inline-block rounded-full bg-zinc-200 px-8 py-3 text-base font-semibold text-zinc-500">
                 Out of stock
               </span>
@@ -86,6 +102,19 @@ export default async function ProductDetailPage({ params }) {
           </p>
         </div>
       </div>
+
+      {/* Customer reviews */}
+      <Reviews rating={product.rating} reviews={product.reviews} />
+
+      {/* You may also like */}
+      {related.length > 0 && (
+        <section className="mt-14">
+          <h2 className="mb-6 text-2xl font-bold text-zinc-900">
+            You may also like
+          </h2>
+          <ProductGrid products={related} />
+        </section>
+      )}
     </main>
   );
 }
