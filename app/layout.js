@@ -3,6 +3,7 @@ import "./globals.css";
 import { CartProvider } from "./CartContext";
 import Header from "./Header";
 import Footer from "./Footer";
+import FloatingCart from "./FloatingCart";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
           <Header />
           {children}
           <Footer />
+          <FloatingCart />
         </CartProvider>
       </body>
     </html>

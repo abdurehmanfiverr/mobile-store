@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "../CartContext";
 import { formatPrice, FREE_DELIVERY_THRESHOLD } from "../products-data";
@@ -18,34 +17,11 @@ export default function CartPage() {
     totalPrice,
   } = useCart();
 
-  // Tracks whether an order was just placed, so we can show a thank-you message.
-  const [orderPlaced, setOrderPlaced] = useState(false);
-
-  // "Place" the order: empty the cart and show a thank-you message.
-  // (There's no real payment — this just simulates a successful checkout.)
-  function checkout() {
-    clearCart();
-    setOrderPlaced(true);
-  }
-
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-12">
       <h2 className="mb-6 text-3xl font-bold text-zinc-900">Your Cart</h2>
 
-      {orderPlaced ? (
-        // Shown right after a successful checkout.
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-8 text-center">
-          <p className="font-medium text-emerald-800">
-            🎉 Thank you! Your order has been placed.
-          </p>
-          <Link
-            href="/products"
-            className="mt-4 inline-block text-sm font-medium text-emerald-700 underline hover:text-emerald-900"
-          >
-            Continue shopping
-          </Link>
-        </div>
-      ) : cart.length === 0 ? (
+      {cart.length === 0 ? (
         // Friendly message when nothing has been added yet.
         <div className="rounded-xl border border-dashed border-zinc-300 bg-white p-8 text-center">
           <p className="text-zinc-500">Your cart is empty.</p>
@@ -143,7 +119,7 @@ export default function CartPage() {
             </div>
           </div>
 
-          {/* Checkout and Clear cart buttons */}
+          {/* Clear cart + Checkout */}
           <div className="flex items-center justify-between gap-4 px-6 py-4">
             <button
               type="button"
@@ -152,13 +128,12 @@ export default function CartPage() {
             >
               Clear cart
             </button>
-            <button
-              type="button"
-              onClick={checkout}
+            <Link
+              href="/checkout"
               className="rounded-lg bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
             >
               Checkout ({formatPrice(totalPrice)})
-            </button>
+            </Link>
           </div>
         </div>
       )}
