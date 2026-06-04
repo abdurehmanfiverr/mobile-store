@@ -16,7 +16,26 @@ export default async function AccountPage({ searchParams }) {
   if (!user) {
     return (
       <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-12">
-        <h2 className="mb-8 text-3xl font-bold text-zinc-900">My Account</h2>
+        <h2 className="mb-6 text-3xl font-bold text-zinc-900">My Account</h2>
+
+        {params?.check === "email" && (
+          <p className="mb-6 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+            Almost there! We&apos;ve sent a confirmation link to your email.
+            Please click it to activate your account, then log in.
+          </p>
+        )}
+        {params?.verify === "failed" && (
+          <p className="mb-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+            That verification link is invalid or has already been used. Try
+            logging in, or sign up again.
+          </p>
+        )}
+        {params?.error === "unverified" && (
+          <p className="mb-6 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-700">
+            Please verify your email first — check your inbox for the
+            confirmation link we sent.
+          </p>
+        )}
 
         <div className="grid gap-8 md:grid-cols-2">
           {/* Log in */}
@@ -105,6 +124,11 @@ export default async function AccountPage({ searchParams }) {
       <p className="mt-2 text-zinc-600">
         Hello, <span className="font-semibold">{user.name}</span> ({user.email})
       </p>
+      {params?.verify === "success" && (
+        <p className="mt-4 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+          ✅ Your email is verified and you&apos;re logged in. Welcome!
+        </p>
+      )}
 
       <h3 className="mb-4 mt-10 text-lg font-semibold text-zinc-900">
         Your orders

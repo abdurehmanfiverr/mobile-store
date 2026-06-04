@@ -98,6 +98,35 @@ export async function getUserByToken(token) {
   }
 }
 
+// Marks a user as verified using their email-verification token, and clears
+// the token. Returns the user (or null if the token isn't found).
+export async function verifyUserByToken(token) {
+  if (!token) return null;
+  if (!useDb) {
+    const list = await readUsers();
+    const u = list.find((x) => x.verifyToken === token);
+    if (!u) return null;
+    u.verified = true;
+    delete u.verifyToken;
+    await writeUsers(list);
+    return u;
+  }
+  try {
+    const sql = await getSql();
+    await ensureTable(sql);
+    const rows = await sql`SELECT data FROM users WHERE data->>'verifyToken' = ${token}`;
+    const u = rows[0]?.data;
+    if (!u) return null;
+    const updated = { ...u, verified: true };
+    delete updated.verifyToken;
+    await sql`UPDATE users SET data = ${JSON.stringify(updated)}::jsonb WHERE email = ${u.email}`;
+    return updated;
+  } catch (err) {
+    console.error("Verify-by-token failed:", err);
+    return null;
+  }
+}
+
 export async function clearUserToken(token) {
   if (!token) return;
   if (!useDb) {

@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { randomUUID } from "crypto";
 import bcrypt from "bcryptjs";
@@ -10,6 +10,7 @@ import {
   setUserToken,
   clearUserToken,
 } from "../lib/users-store";
+import { sendVerificationEmail, verificationEnabled } from "../lib/mailer";
 
 // Create a session: a random token saved on the user + a secure cookie.
 async function startSession(email) {
@@ -38,7 +39,25 @@ export async function signup(formData) {
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
-  await createUser({ name, email, passwordHash });
+
+  if (verificationEnabled) {
+    // Verification is ON (a sending domain is configured): create the account
+    // as unverified and email a confirmation link instead of logging in.
+    const verifyToken = randomUUID();
+    await createUser({ name, email, passwordHash, verified: false, verifyToken });
+
+    const h = await headers();
+    const host = h.get("host");
+    const proto = h.get("x-forwarded-proto") || "https";
+    const verifyUrl = `${proto}://${host}/verify?token=${verifyToken}`;
+    await sendVerificationEmail(email, name, verifyUrl);
+
+    redirect("/account?check=email");
+  }
+
+  // Verification is OFF (no sending domain yet): keep the original behaviour —
+  // mark verified and log the customer straight in.
+  await createUser({ name, email, passwordHash, verified: true });
   await startSession(email);
   redirect("/account");
 }
@@ -50,6 +69,10 @@ export async function login(formData) {
   const user = await getUserByEmail(email);
   if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
     redirect("/account?error=login");
+  }
+  // If verification is on, block accounts that haven't confirmed their email.
+  if (verificationEnabled && user.verified === false) {
+    redirect("/account?error=unverified");
   }
   await startSession(email);
   redirect("/account");
