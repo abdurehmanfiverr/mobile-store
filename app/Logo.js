@@ -21,7 +21,7 @@ export default function Logo() {
           <path d="M12 18h.01" />
         </svg>
       </span>
-      <span className="text-xl font-bold tracking-tight">
+      <span className="whitespace-nowrap text-lg font-bold tracking-tight sm:text-xl">
         Mobile <span className="font-normal opacity-90">&amp; Accessories</span>
       </span>
     </span>
