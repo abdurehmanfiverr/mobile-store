@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "./Logo";
 
 // Footer shows on every page (added in the layout). No interactivity, so it
 // stays a simple, fast component.
@@ -8,9 +9,9 @@ export default function Footer() {
       <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 sm:grid-cols-3">
         {/* Store name and tagline */}
         <div>
-          <p className="flex items-center gap-2 text-lg font-bold text-white">
-            <span>📱</span> Shehroz Mobiles and Accessories
-          </p>
+          <div className="text-white">
+            <Logo />
+          </div>
           <p className="mt-3 text-sm">
             Your trusted shop for original mobile accessories in Pakistan.
           </p>
@@ -72,7 +73,7 @@ export default function Footer() {
 
       {/* Bottom copyright line */}
       <div className="border-t border-zinc-800 py-4 text-center text-xs text-zinc-500">
-        &copy; 2026 Shehroz Mobiles and Accessories. All rights reserved.
+        &copy; 2026 Mobile and Accessories. All rights reserved.
       </div>
     </footer>
   );

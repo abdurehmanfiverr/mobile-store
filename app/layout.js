@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Shehroz Mobiles and Accessories",
+  title: "Mobile and Accessories",
   description:
     "Original mobile accessories at honest prices, delivered across Pakistan.",
 };

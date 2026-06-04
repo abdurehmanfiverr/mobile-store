@@ -7,7 +7,7 @@ export default function ReturnPolicyPage() {
 
       <div className="mt-6 space-y-5 text-lg leading-relaxed text-zinc-600">
         <p>
-          We want you to be happy with every purchase from Shehroz Mobiles and
+          We want you to be happy with every purchase from Mobile and
           Accessories. If something isn&apos;t right, we offer a simple{" "}
           <strong className="text-zinc-900">7 day return policy</strong> &mdash;
           no questions asked.

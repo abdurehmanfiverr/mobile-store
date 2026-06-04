@@ -68,7 +68,7 @@ export default async function ProductDetailPage({ params }) {
 
           <p className="mt-6 leading-relaxed text-zinc-600">
             {product.description ||
-              "A quality mobile accessory from Shehroz Mobiles and Accessories."}
+              "A quality mobile accessory from Mobile and Accessories."}
           </p>
 
           <div className="mt-8">

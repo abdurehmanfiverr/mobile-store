@@ -26,7 +26,7 @@ export async function notifyNewOrder(order) {
     await resend.emails.send({
       // While you don't have a custom domain, Resend lets you send from this
       // address to your own account email.
-      from: "Shehroz Mobiles <onboarding@resend.dev>",
+      from: "Mobile and Accessories <onboarding@resend.dev>",
       to,
       subject: `New order ${order.id} — ${formatPrice(order.total)}`,
       html: `

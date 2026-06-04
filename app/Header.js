@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCart } from "./CartContext";
+import Logo from "./Logo";
 
 export default function Header() {
   // Read the total item count from the shared cart box.
@@ -12,15 +13,8 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full bg-gradient-to-r from-blue-600 to-cyan-500 shadow-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         {/* Logo on the left — clicking it goes Home */}
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-xl font-bold text-white"
-        >
-          <span className="text-2xl">📱</span>
-          <span>
-            Shehroz Mobiles
-            <span className="hidden sm:inline"> and Accessories</span>
-          </span>
+        <Link href="/" className="flex items-center text-white">
+          <Logo />
         </Link>
 
         {/* Navigation links + cart on the right */}

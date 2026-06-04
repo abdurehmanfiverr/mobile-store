@@ -166,7 +166,7 @@ export default async function Home({ searchParams }) {
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg text-blue-50 lg:mx-0">
               From wireless earbuds to fast chargers, smart watches to power
-              banks, Shehroz Mobiles and Accessories brings you original
+              banks, Mobile and Accessories brings you original
               products at prices you&apos;ll love. Free delivery on orders over
               Rs 8000.
             </p>
@@ -355,7 +355,7 @@ export default async function Home({ searchParams }) {
         <div className="mx-auto max-w-3xl px-6 py-16 text-center">
           <h2 className="text-3xl font-bold text-zinc-900">About Us</h2>
           <p className="mt-6 text-lg leading-relaxed text-zinc-600">
-            At Shehroz Mobiles and Accessories, we make it simple to find the
+            At Mobile and Accessories, we make it simple to find the
             mobile accessories you need. From everyday essentials to the latest
             gadgets, every product is hand-picked for quality and offered at
             honest prices. Shop with confidence, pay on delivery, and enjoy fast
