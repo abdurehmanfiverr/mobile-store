@@ -11,8 +11,17 @@ export async function placeOrder(data) {
   const { customer, items, subtotal, deliveryFee, couponCode } = data || {};
 
   // Basic validation — make sure we have what we need.
-  if (!customer?.name?.trim() || !customer?.phone?.trim() || !customer?.address?.trim()) {
-    return { ok: false, error: "Please fill in your name, phone, and address." };
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((customer?.email || "").trim());
+  if (
+    !customer?.name?.trim() ||
+    !customer?.phone?.trim() ||
+    !emailOk ||
+    !customer?.address?.trim()
+  ) {
+    return {
+      ok: false,
+      error: "Please fill in your name, phone, a valid email, and address.",
+    };
   }
   if (!Array.isArray(items) || items.length === 0) {
     return { ok: false, error: "Your cart is empty." };
@@ -35,8 +44,10 @@ export async function placeOrder(data) {
     customer: {
       name: customer.name.trim(),
       phone: customer.phone.trim(),
+      email: customer.email.trim(),
       address: customer.address.trim(),
       city: (customer.city || "").trim(),
+      note: (customer.note || "").trim(),
     },
     items,
     subtotal,
