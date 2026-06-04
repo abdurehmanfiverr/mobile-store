@@ -5,6 +5,7 @@
 import { saveOrder } from "../lib/orders";
 import { getCurrentUser } from "../lib/session";
 import { getCoupon, couponDiscount } from "../lib/coupons";
+import { notifyNewOrder } from "../lib/notify";
 
 export async function placeOrder(data) {
   const { customer, items, subtotal, deliveryFee, couponCode } = data || {};
@@ -48,5 +49,6 @@ export async function placeOrder(data) {
   };
 
   const saved = await saveOrder(order);
+  await notifyNewOrder(order); // emails the owner if email alerts are set up
   return { ok: true, orderId: order.id, saved };
 }
