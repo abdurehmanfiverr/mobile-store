@@ -127,6 +127,51 @@ export async function verifyUserByToken(token) {
   }
 }
 
+// Merge fields into a user record (profile edits, reset tokens, new password).
+export async function updateUser(email, partial) {
+  email = normalize(email);
+  if (!useDb) {
+    const list = await readUsers();
+    const u = list.find((x) => x.email === email);
+    if (u) Object.assign(u, partial);
+    await writeUsers(list);
+    return u || null;
+  }
+  try {
+    const sql = await getSql();
+    await ensureTable(sql);
+    await sql`UPDATE users SET data = data || ${JSON.stringify(partial)}::jsonb WHERE email = ${email}`;
+    const rows = await sql`SELECT data FROM users WHERE email = ${email}`;
+    return rows[0]?.data || null;
+  } catch (err) {
+    console.error("updateUser failed:", err);
+    return null;
+  }
+}
+
+// Find a user by a valid (non-expired) password-reset token.
+export async function getUserByResetToken(token) {
+  if (!token) return null;
+  let user = null;
+  if (!useDb) {
+    const list = await readUsers();
+    user = list.find((x) => x.resetToken === token) || null;
+  } else {
+    try {
+      const sql = await getSql();
+      await ensureTable(sql);
+      const rows = await sql`SELECT data FROM users WHERE data->>'resetToken' = ${token}`;
+      user = rows[0]?.data || null;
+    } catch (err) {
+      console.error("reset-token lookup failed:", err);
+      return null;
+    }
+  }
+  if (!user) return null;
+  if (user.resetExpires && Date.now() > user.resetExpires) return null;
+  return user;
+}
+
 export async function clearUserToken(token) {
   if (!token) return;
   if (!useDb) {

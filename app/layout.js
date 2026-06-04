@@ -4,6 +4,7 @@ import { CartProvider } from "./CartContext";
 import Header from "./Header";
 import Footer from "./Footer";
 import FloatingCart from "./FloatingCart";
+import { getCurrentUser } from "./lib/session";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,7 +22,8 @@ export const metadata = {
     "Original mobile accessories at honest prices, delivered across Pakistan.",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const user = await getCurrentUser();
   return (
     <html
       lang="en"
@@ -31,7 +33,7 @@ export default function RootLayout({ children }) {
         {/* CartProvider shares one cart with every page inside it.
             Header shows on every page; children is the current page. */}
         <CartProvider>
-          <Header />
+          <Header user={user} />
           {children}
           <Footer />
           <FloatingCart />
